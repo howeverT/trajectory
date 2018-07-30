@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-plt.figure()
+from matplotlib import animation
+bg_color = 'black'
+fg_color = 'white'
+fig=plt.figure(facecolor=bg_color, edgecolor=fg_color)
 t=0.1
 G=6.67*10**-11
 M=5.965*10**24
@@ -23,6 +26,11 @@ vx=v0**np.cos(math.radians(a0))
 vy=v0**np.sin(math.radians(a0))
 ax=a*(abs(x[-1])/z)
 ay=a*(abs(y[-1])/z)
+point,= plt.plot([x[0]], [y[0]], 'o')
+
+
+#plt.figure(facecolor=bg_color, edgecolor=fg_color)
+
 
 def XandY():
  plt.xticks([-100,100])
@@ -34,9 +42,17 @@ def XandY():
  ax.spines['bottom'].set_position(('data', 0))
  ax.yaxis.set_ticks_position('none')
  ax.spines['left'].set_position(('data',0))
-  
-  
-  
+ ax.spines['left'].set_color(fg_color)
+ ax.spines['bottom'].set_color(fg_color)
+
+ ax.patch.set_facecolor(bg_color)
+ ax.xaxis.set_tick_params(color=fg_color, labelcolor=fg_color)
+ ax.yaxis.set_tick_params(color=fg_color, labelcolor=fg_color)
+
+
+
+
+
 def trajectory(vx,vy,ax,ay,t):
  #x.append(x0)
  #y.append(y0)
@@ -57,11 +73,14 @@ def trajectory(vx,vy,ax,ay,t):
   #print(v0*t*np.sin(math.radians(a0)))
  plt.plot(x,y)
 
+def update_point(n, x, y, point):
+ point.set_xdata(np.array(x[n]))
+ point.set_ydata(np.array(y[n]))
+ return point
 
-  
 XandY()
 plt.plot(0,0,'ro')
 trajectory(vx,vy,ax,ay,t)
 plt.axis([-100,100,-100,100])
+ani=animation.FuncAnimation(fig, update_point, 1000, interval=10, fargs=(x, y, point))
 plt.show()
-  
